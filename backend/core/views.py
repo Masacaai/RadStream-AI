@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
-from core.models import Patient
+from core.models import Data
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -23,7 +23,8 @@ class TestApiView(APIView):
         """
         print("entered post in TestApiView")
         try:
-            received_data = request.data
+            received_data_dict = request.data
+            received_data = received_data_dict.get('data')
             print(f"Received from frontend (DRF): {received_data}")
 
             if not isinstance(received_data, str) or received_data.strip() == "":

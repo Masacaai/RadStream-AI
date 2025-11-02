@@ -26,11 +26,32 @@ export default function RadiologistDemo() {
     },
   ];
 
+  const test_integ = async () => {
+     try {
+      const payload = {data: "Hellooooo"}; 
+      const response = await fetch("http://localhost:8000/test_api/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+      console.log("Response from backend:", data);
+      alert(`Backend says: ${data.message}`);
+    } catch (error) {
+      console.error("Error calling API:", error);
+      alert("Error calling backend API");
+    }
+  };
+
   return (
     <div className="demo-root">
       <header className="demo-header">
         <h1>Radiologist Workbench</h1>
         <p>Analyze, visualize, and verify AI findings</p>
+        <button onClick={test_integ}>test_api</button>
       </header>
 
       <main className="demo-container">
