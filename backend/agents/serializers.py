@@ -1,3 +1,4 @@
+import threading
 from rest_framework import serializers
 from .models import Study, Finding
 
@@ -31,9 +32,18 @@ class StudyCreateSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         study = Study.objects.create(**validated_data)
+        
+        # Process in background thread instead of Celery
         from .tasks import process_study
-        process_study.delay(str(study.id))
-        return study
+        thread = threading.Thread(
+            target=process_study,
+            args=(str(study.id),),
+            daemon=True,
+            name=f"study-{study.id}"
+        )
+        thread.start()
+        
+        return study 
 
 
 class StudyListSerializer(serializers.ModelSerializer):

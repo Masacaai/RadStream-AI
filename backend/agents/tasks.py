@@ -1,12 +1,13 @@
-from celery import shared_task
 from django.utils import timezone
 import asyncio
 
 from .models import Study, Finding
 from .main.orchestrator import Orchestrator
 
-@shared_task(bind=True)
-def process_study(self, study_id: str):
+def process_study(study_id: str):
+    """
+    Synchronous version for threading - same logic as Celery task
+    """
     try:
         study = Study.objects.get(id=study_id)
         study.status = 'processing'
