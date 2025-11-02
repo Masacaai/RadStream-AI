@@ -1,50 +1,62 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import "./login.css";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./healthcare-landing.css";
 
 export default function LoginPage() {
-  const [role, setRole] = useState("patient");
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Navigate based on role selection
-    if (role === "patient") navigate("/patient-demo");
-    else if (role === "radiologist") navigate("/radiologist-demo");
-    else if (role === "doctor") navigate("/doctor-demo");
+    // --- Hardcoded logins ---
+    if (email === "ammar@gmail.com" && password === "1234") {
+      navigate("/radiologist");
+    } else if (email === "aaqel@gmail.com" && password === "1234") {
+      navigate("/doctor");
+    } else if (email === "abdul@gmail.com" && password === "1234") {
+      navigate("/patient");
+    } else {
+      setError("Invalid email or password.");
+    }
   };
 
   return (
     <div className="login-root">
       <div className="login-card">
-        <h1 className="login-title">Welcome Back</h1>
-        <p className="login-sub">Sign in to access your Hoppr demo dashboard.</p>
+        <h2>Welcome Back</h2>
+        <p>Sign in to access the Hoppr demo.</p>
 
-        <form className="login-form" onSubmit={handleLogin}>
+        <form onSubmit={handleSubmit}>
           <label>Email</label>
-          <input type="email" placeholder="you@example.com" required />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="you@example.com"
+            required
+          />
 
           <label>Password</label>
-          <input type="password" placeholder="••••••••" required />
-
-          <label>Select Role</label>
-          <select
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-            className="login-select"
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="••••"
             required
-          >
-            <option value="patient">Patient</option>
-            <option value="radiologist">Radiologist</option>
-            <option value="doctor">Doctor</option>
-          </select>
+          />
 
-          <button type="submit" className="login-btn">Login</button>
+          {error && <p className="login-error">{error}</p>}
+
+          <button type="submit" className="login-btn">
+            Login
+          </button>
         </form>
 
         <p className="login-footer">
-          Don’t have an account? <Link to="/">Go back</Link>
+          Don't have an account? <span>Create new</span>
         </p>
       </div>
     </div>

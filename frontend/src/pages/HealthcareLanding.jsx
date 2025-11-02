@@ -10,11 +10,12 @@ export default function HealthcareLanding() {
           <div className="hl-logo">HOPPR X-ray</div>
 
           <nav className="hl-nav-links">
-            <a href="#home" className="is-active">Home</a>
-            <a href="#intro">About</a>
-            <a href="#how">Technology</a>
-            <a href="#services">Services</a>
-          </nav>
+  <a href="#home" className="is-active">Home</a>
+  <a href="/about">About</a>
+  <a href="#tech">Technology</a>
+  <a href="#services">Services</a>
+</nav>
+
 
           <div className="hl-nav-cta">
             <Link className="hl-btn hl-btn-black" to="/login">Try the demo</Link>
@@ -86,6 +87,7 @@ export default function HealthcareLanding() {
               </ul>
             </div>
           </section>
+
 
           {/* INTRO / WHAT THIS IS */}
           <section id="intro" className="hl-intro">
