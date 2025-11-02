@@ -25,7 +25,7 @@ export default function AboutPage() {
         <div className="hl-container">
           <h1 className="hl-about-title">About the Project</h1>
           <p className="hl-about-sub">
-            Our project showcases Hoppr’s medical AI for chest X-ray analysis —
+            Our project showcases Hoppr’s medical imaging AI for chest X-ray analysis —
             transforming DICOM scans into readable vision–language reports with
             interpretable risk scores for key conditions. Designed for MTCHacks
             2025, this demo explores how AI can empower radiologists, doctors,

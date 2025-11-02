@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CollapsibleReport from "../components/CollapsibleReport";
 import "./healthcare-landing.css";
+
 
 export default function RadiologistDemo() {
   const [patientHistory, setPatientHistory] = useState("");
@@ -15,6 +16,26 @@ export default function RadiologistDemo() {
   const [clinicalReport, setClinicalReport] = useState("");
   const [patientSummary, setPatientSummary] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [scans, setScans] = useState([])
+  
+  const fetchScans = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/get_results/", {
+      method: "POST",
+    });
+    const data = await response.json();
+    console.log("Loaded scans:", data);
+    setScans(data.scans || []);
+    } catch (error) {
+      console.error("Error fetching scans:", error);
+    }
+  };
+
+  // 📥 Run once when the component mounts
+  useEffect(() => {
+    fetchScans();
+  }, []);
+
 
   // NEW: Track what's currently happening
   const [currentPhase, setCurrentPhase] = useState("");
@@ -240,7 +261,7 @@ export default function RadiologistDemo() {
       <header className="demo-header">
         <h1>Radiologist Workbench</h1>
         <p>Analyze, visualize, and verify AI findings</p>
-        <button onClick={test_integ}>test_api</button>
+        {/* <button onClick={test_integ}>test_api</button> */}
       </header>
 
       <main className="demo-container">
@@ -601,6 +622,25 @@ export default function RadiologistDemo() {
                 </div>
               </div>
             )}
+
+            {/* ✅ OK Button */}
+            <button
+              onClick={handleConfirm}
+              disabled={isProcessing}
+              style={{
+                marginTop: "20px",
+                padding: "10px 20px",
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                fontWeight: "500",
+                cursor: "pointer",
+              }}
+            >
+              Approve
+            </button>
+
           </div>
         )}
 
