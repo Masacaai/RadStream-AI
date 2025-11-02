@@ -31,7 +31,7 @@ export default function HealthcareLanding() {
             {/* left copy */}
             <div className="hl-left">
               <div className="hl-kicker">MTC Hacks 2025 • Hoppr AI Track</div>
-              <h1 className="hl-title">Comprehensive Radilogical Insights</h1>
+              <h1 className="hl-title">Comprehensive Radiological Insights</h1>
               <p className="hl-sub">
                 Upload a DICOM image of any medical scan, to get a comprehensive report plus risk scores
                 for key findings like pneumothorax, cardiomegaly, pleural effusion and may more medical conditions.

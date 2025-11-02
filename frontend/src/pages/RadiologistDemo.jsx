@@ -40,6 +40,7 @@ export default function RadiologistDemo() {
   // NEW: Track what's currently happening
   const [currentPhase, setCurrentPhase] = useState("");
 
+  /*
   const scans = [
     {
       title: "Scan 1 – John Doe",
@@ -62,6 +63,7 @@ export default function RadiologistDemo() {
       ],
     },
   ];
+  */
 
   const handleFileChange = (e) => {
     setDicomFile(e.target.files[0]);
@@ -625,8 +627,8 @@ export default function RadiologistDemo() {
 
             {/* ✅ OK Button */}
             <button
-              onClick={handleConfirm}
-              disabled={isProcessing}
+              // onClick={handleConfirm}
+              // disabled={isProcessing}
               style={{
                 marginTop: "20px",
                 padding: "10px 20px",
