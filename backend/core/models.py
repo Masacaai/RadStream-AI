@@ -85,7 +85,7 @@ class AIResult(models.Model):
     findings_json = models.JSONField(default=dict, blank=True)
 
     def __str__(self):
-        return f"AI Findings for {self.scan}"
+        return f"AI - Findings for {self.scan}"
 
 
 class Report(models.Model):
