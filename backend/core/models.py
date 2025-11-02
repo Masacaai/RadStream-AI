@@ -68,7 +68,7 @@ class AIResult(models.Model):
     generated_at = models.DateTimeField(auto_now_add=True)
     findings_text = models.TextField()
     findings_json = models.JSONField(default=dict, blank=True)
-    model_version = models.CharField(max_length=50, blank=True)
+    # model_version = models.CharField(max_length=50, blank=True)
     
     def __str__(self):
         return f"AI Findings for {self.scan}"
