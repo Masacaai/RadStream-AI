@@ -7,7 +7,7 @@ export default function HealthcareLanding() {
       {/* NAV */}
       <header className="hl-nav">
         <div className="hl-container hl-nav-inner">
-          <div className="hl-logo">HOPPR X-ray</div>
+          <div className="hl-logo">RadStreamAI</div>
 
           <nav className="hl-nav-links">
   <Link to="/" className="is-active">Home</Link>
@@ -31,11 +31,11 @@ export default function HealthcareLanding() {
             {/* left copy */}
             <div className="hl-left">
               <div className="hl-kicker">MTC Hacks 2025 • Hoppr AI Track</div>
-              <h1 className="hl-title">Instant X-ray Insights</h1>
+              <h1 className="hl-title">Comprehensive Radilogical Insights</h1>
               <p className="hl-sub">
-                Upload a DICOM and get a readable VLM report plus risk scores
-                for key findings like pneumothorax, cardiomegaly, and pleural effusion —
-                powered by Hoppr.
+                Upload a DICOM image of any medical scan, to get a comprehensive report plus risk scores
+                for key findings like pneumothorax, cardiomegaly, pleural effusion and may more medical conditions.
+                powered by Hoppr AIs tools and our Agentic AI framework.
               </p>
 
               <div className="hl-cta-row">
@@ -95,11 +95,11 @@ export default function HealthcareLanding() {
             <div className="hl-container">
               <h2 style={{ margin: "0 0 10px" }}>What is this project?</h2>
               <p className="hl-intro-text">
-                This MTCHacks 2025 demo uses <strong>Hoppr AI</strong> to convert an X-Ray
-                <strong> DICOM</strong> into a concise <strong>vision-language model report</strong> and
-                <strong> condition scores</strong> (e.g., pneumothorax, cardiomegaly, pleural effusion).
-                The browser talks to a tiny <strong>Node/Express proxy</strong> so your API key stays server-side.
-                Open the demo, upload a file, select models, and view results in seconds.
+                This MTCHacks 2025 demo uses <strong>Hoppr AI</strong> to convert any medical
+                <strong> DICOM</strong> image into a concise <strong>report</strong> and
+                <strong> condition scores</strong> (e.g., pneumothorax: 0.7, cardiomegaly: 0.3, etc...).
+                Our app utilizes <strong>an agentic AI framework</strong> alongside HOPPR AI's 
+                <strong> Vision Language Model</strong> and <strong>Binary Classification Models</strong>.
                 
               </p>
               <div style={{ marginTop: 14 }}>
