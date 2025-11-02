@@ -29,7 +29,7 @@ class Data(models.Model):
         ordering = ['id']
 
     def __str__(self):
-        return f"{self.patient_name} - {self.associated_dcm_image}"
+        return f"{self.patient_name} - {self.associated_dcm_image}" # ignore
 
 """
 class Patient(models.Model):
