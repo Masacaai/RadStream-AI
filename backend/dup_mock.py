@@ -5,7 +5,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'website.settings')
 django.setup()
 from core.models import Data
 
-csv_file_path = os.path.join(os.path.dirname(__file__), '../core/mock_patients_data.csv')
+csv_file_path = os.path.join(os.path.dirname(__file__), 'core\\sample.csv')
 with open(csv_file_path, newline='', encoding='utf-8') as csvfile:
     reader = csv.DictReader(csvfile)
     for row in reader:

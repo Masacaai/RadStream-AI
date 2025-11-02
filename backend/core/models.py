@@ -16,7 +16,22 @@ imgs = {
     "Pneumothorax": ["afa4de6570c31504ba4b77978377ccc9.dcm"],
     "Pulmonary_fibrosis":  ["58c96358e94c768b0eeb723bf985d575.dcm"]
 }
+class Data(models.Model):
+    id = models.AutoField(primary_key=True)
+    patient_name = models.CharField(max_length=200)
+    patient_history = models.TextField()
+    patient_visit_reason = models.TextField()
+    associated_dcm_image = models.CharField(max_length=255)
 
+    class Meta:
+        verbose_name = "Patient Scan Record"
+        verbose_name_plural = "Patient Scan Records"
+        ordering = ['id']
+
+    def __str__(self):
+        return f"{self.patient_name} - {self.associated_dcm_image}"
+
+"""
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.CharField(max_length=100)
@@ -101,3 +116,4 @@ class Report(models.Model):
 
     def __str__(self):
         return f"Report for {self.patient} ({self.created_at.date()})"
+"""
