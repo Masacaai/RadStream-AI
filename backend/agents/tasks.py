@@ -12,7 +12,9 @@ def process_study(study_id: str):
         study = Study.objects.get(id=study_id)
         study.status = 'processing'
         study.save()
-        
+        print(f"Processing study {study_id}...", flush=True)
+        print(f"Study DICOM path: {study.dicom_file.path}", flush=True)
+
         # Run analysis
         orchestrator = Orchestrator()
         dicom_path = study.dicom_file.path

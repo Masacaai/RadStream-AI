@@ -32,11 +32,15 @@ class Orchestrator:
     async def analyze(self, dicom_path: str, patient_history: str, visit_reason: str) -> dict:
         hoppr_study_id = self.upload_dicom(dicom_path)
         context = {'history': patient_history, 'reason': visit_reason}
-        
+
+        print(f"Orchestrator: Starting analysis for study {hoppr_study_id}", flush=True)
+        print(f"Orchestrator: Patient history - {patient_history}", flush=True)
+        print(f"Orchestrator: Visit reason - {visit_reason}", flush=True)
+        print("Orchestrator: Running triage...", flush=True) 
         # Phase 1: Triage
         strategy = self.triage.plan_strategy(patient_history, visit_reason)
         urgency = strategy['urgency']
-        
+        print(f"Orchestrator: Triage completed. Urgency - {urgency}, Priority Systems - {strategy['priority_systems']}", flush=True)
         # Phase 2: Run models
         all_findings = {}
         workflow_log = {'strategy': strategy, 'phases': []}
@@ -58,11 +62,11 @@ class Orchestrator:
             if critical and urgency in ["critical", "high"]:
                 workflow_log['early_stop'] = True
                 break
-        
+        print("Orchestrator: Model execution completed.", flush=True)
         # Phase 3: Decision
         action = self.triage.decide_next_action(all_findings, urgency)
         workflow_log['action'] = action
-        
+        print(f"Orchestrator: Decision made - {action}", flush=True)
         # Phase 4: VLM
         if action == "ESCALATE":
             vlm_text = "VLM skipped - emergency protocol"
@@ -71,7 +75,7 @@ class Orchestrator:
             focus = ', '.join([n for n, d in all_findings.items() if d['score'] > 0.5])
             vlm_text = self.vlm.analyze(hoppr_study_id, focus if focus else None)
             workflow_log['vlm_skipped'] = False
-        
+        print("Orchestrator: VLM analysis completed.", flush=True)
         # Phase 5: Reports
         if action == "ESCALATE":
             clinical_report = self.reporter.generate_emergency(all_findings, context)
@@ -79,12 +83,12 @@ class Orchestrator:
         else:
             clinical_report = self.reporter.generate(all_findings, vlm_text, context, urgency, action)
             status = 'completed'
-        
+        print("Orchestrator: Report generation completed.", flush=True)
         # Phase 6: Patient summary
         patient_summary = self.patient_summary.generate_patient_summary(
             all_findings, urgency, action, clinical_report
         )
-        
+        print("Orchestrator: Patient summary generation completed.", flush=True)
         return {
             'hoppr_study_id': hoppr_study_id,
             'status': status,
