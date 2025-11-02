@@ -44,14 +44,98 @@ class TestApiView(APIView):
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
  
-class LoginView(APIView):
+class SaveResultsView(APIView):
     def post(self, request, *args, **kwargs):
-        pass
+        try:
+            data = request.data
+            print("Received data to save:", data)
 
-class AIAgentsView(APIView):
-    def post(self, request, *args, **kwargs):
-        pass
+            # Validate required fields
+            required_fields = ["patient_name", "patient_history", "patient_visit_reason", "associated_dcm_image"]
+            missing = [f for f in required_fields if f not in data or not data[f]]
+            if missing:
+                return Response(
+                    {"error": f"Missing required fields: {', '.join(missing)}"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
-class DownloadReportView(APIView):
+            # Create the Data object
+            record = Data.objects.create(
+                patient_name=data["patient_name"],
+                patient_history=data["patient_history"],
+                patient_visit_reason=data["patient_visit_reason"],
+                associated_dcm_image=data["associated_dcm_image"]
+            )
+
+            print(f"Saved record ID {record.id} for patient {record.patient_name}")
+
+            return Response(
+                {
+                    "message": "Patient scan saved successfully!",
+                    "record_id": record.id,
+                    "patient_name": record.patient_name,
+                },
+                status=status.HTTP_201_CREATED
+            )
+
+        except Exception as e:
+            print("Error saving results:", str(e))
+            return Response(
+                {"error": f"An unexpected error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
+
+class PresentResultsView(APIView):
     def post(self, request, *args, **kwargs):
-        pass
+        try:
+            # Fetch all records ordered by ID descending (latest first)
+            records = Data.objects.all().order_by("-id")[:3]
+
+            if records.exists():
+                print(f"✅ Found {records.count()} records in DB.")
+                data = [
+                    {
+                        "title": f"Scan – {r.patient_name}",
+                        "summary": f"Visit reason: {r.patient_visit_reason}",
+                        "details": [
+                            {"label": "Patient", "value": r.patient_name},
+                            {"label": "History", "value": r.patient_history},
+                            {"label": "Visit Reason", "value": r.patient_visit_reason},
+                            {"label": "Associated DICOM", "value": r.associated_dcm_image},
+                        ]
+                    }
+                    for r in records
+                ]
+            else:
+                print("⚠️ No records found — returning demo data.")
+                data = [
+                    {
+                        "title": "Scan 1 – John Doe",
+                        "summary": "Pending AI analysis. Click to view details.",
+                        "details": [
+                            {"label": "Scan ID", "value": "RAD001"},
+                            {"label": "Patient", "value": "John Doe"},
+                            {"label": "AI Output", "value": "Effusion probability: 0.21"},
+                            {"label": "Observation", "value": "Minimal findings"},
+                        ],
+                    },
+                    {
+                        "title": "Scan 2 – Abdul Khan",
+                        "summary": "AI flagged minor opacity, needs confirmation.",
+                        "details": [
+                            {"label": "Scan ID", "value": "RAD002"},
+                            {"label": "Patient", "value": "Abdul Khan"},
+                            {"label": "AI Output", "value": "Opacity confidence: 0.78"},
+                            {"label": "Observation", "value": "Likely benign"},
+                        ],
+                    },
+                ]
+
+            return Response({"scans": data}, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            print("Error in PresentResultsView:", str(e))
+            return Response(
+                {"error": f"An unexpected error occurred: {str(e)}"},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

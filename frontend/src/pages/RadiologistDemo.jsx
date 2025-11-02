@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CollapsibleReport from "../components/CollapsibleReport";
 import "./healthcare-landing.css";
+
 
 export default function RadiologistDemo() {
   const [patientHistory, setPatientHistory] = useState("");
@@ -11,29 +12,27 @@ export default function RadiologistDemo() {
   const [clinicalReport, setClinicalReport] = useState("");
   const [patientSummary, setPatientSummary] = useState("");
   const [isProcessing, setIsProcessing] = useState(false);
+  const [scans, setScans] = useState([])
+  
+  const fetchScans = async () => {
+  try {
+    const response = await fetch("http://localhost:8000/get_results/", {
+      method: "POST",
+    });
+    const data = await response.json();
+    console.log("Loaded scans:", data);
+    setScans(data.scans || []);
+    } catch (error) {
+      console.error("Error fetching scans:", error);
+    }
+  };
 
-  const scans = [
-    {
-      title: "Scan 1 – John Doe",
-      summary: "Pending AI analysis. Click to view details.",
-      details: [
-        { label: "Scan ID", value: "RAD001" },
-        { label: "Patient", value: "John Doe" },
-        { label: "AI Output", value: "Effusion probability: 0.21" },
-        { label: "Observation", value: "Minimal findings" },
-      ],
-    },
-    {
-      title: "Scan 2 – Abdul Khan",
-      summary: "AI flagged minor opacity, needs confirmation.",
-      details: [
-        { label: "Scan ID", value: "RAD002" },
-        { label: "Patient", value: "Abdul Khan" },
-        { label: "AI Output", value: "Opacity confidence: 0.78" },
-        { label: "Observation", value: "Likely benign" },
-      ],
-    },
-  ];
+  // 📥 Run once when the component mounts
+  useEffect(() => {
+    fetchScans();
+  }, []);
+
+
 
   const handleFileChange = (e) => {
     setDicomFile(e.target.files[0]);
@@ -139,12 +138,72 @@ export default function RadiologistDemo() {
     }
   };
 
+  const handleConfirm = async () => {
+    try {
+      if (!studyId) {
+        alert("No study to confirm!");
+        return;
+      }
+
+      const payload = {
+        study_id: studyId,
+        patient_history: patientHistory,
+        visit_reason: visitReason,
+        clinical_report: clinicalReport,
+        patient_summary: patientSummary,
+      };
+
+      // 🔥 POST to backend to save the confirmed study
+      const response = await fetch("http://localhost:8000/api/studies/save_results/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      if (!response.ok) {
+        alert("Error saving study review");
+        return;
+      }
+
+      const result = await response.json();
+      console.log("✅ Saved:", result);
+
+      // 🧩 Add to "Previous Scans" (top of list)
+      const newScan = {
+        title: `Scan – ${result.patient_name || "Unknown"}`,
+        summary: "Review saved and finalized.",
+        details: [
+          { label: "Study ID", value: studyId },
+          { label: "Patient History", value: patientHistory },
+          { label: "Visit Reason", value: visitReason },
+          { label: "Clinical Report", value: clinicalReport.slice(0, 80) + "..." },
+        ],
+      };
+
+      setScans((prev) => [newScan, ...prev]);
+
+      // 🧹 Clear current state
+      setStudyId(null);
+      setPatientHistory("");
+      setVisitReason("");
+      setDicomFile(null);
+      setStatus("");
+      setClinicalReport("");
+      setPatientSummary("");
+
+      alert("✅ Study confirmed and saved!");
+    } catch (error) {
+      console.error("Error confirming study:", error);
+      alert("Error saving study review");
+    }
+  };
+
   return (
     <div className="demo-root">
       <header className="demo-header">
         <h1>Radiologist Workbench</h1>
         <p>Analyze, visualize, and verify AI findings</p>
-        <button onClick={test_integ}>test_api</button>
+        {/* <button onClick={test_integ}>test_api</button> */}
       </header>
 
       <main className="demo-container">
@@ -254,6 +313,25 @@ export default function RadiologistDemo() {
                 <p style={{ whiteSpace: "pre-wrap" }}>{patientSummary}</p>
               </div>
             )}
+
+            {/* ✅ OK Button */}
+            <button
+              onClick={handleConfirm}
+              disabled={isProcessing}
+              style={{
+                marginTop: "20px",
+                padding: "10px 20px",
+                backgroundColor: "#28a745",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                fontWeight: "500",
+                cursor: "pointer",
+              }}
+            >
+              Approve
+            </button>
+
           </div>
         )}
 
