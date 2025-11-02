@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import HealthcareLanding from "./pages/HealthcareLanding";
 import AboutPage from "./pages/AboutPage";
+import TechnologyPage from "./pages/TechnologyPage";
 import LoginPage from "./pages/LoginPage";
 import PatientDemo from "./pages/PatientDemo";
 import RadiologistDemo from "./pages/RadiologistDemo";
@@ -11,6 +12,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<HealthcareLanding />} />
       <Route path="/about" element={<AboutPage />} />
+      <Route path="/technology" element={<TechnologyPage />} />
       <Route path="/login" element={<LoginPage />} />
       <Route path="/patient" element={<PatientDemo />} />
       <Route path="/radiologist" element={<RadiologistDemo />} />

@@ -1,35 +1,37 @@
 import React from "react";
+import CollapsibleReport from "../components/CollapsibleReport";
 import "./healthcare-landing.css";
 
 export default function PatientDemo() {
+  const myReports = [
+    {
+      title: "Report – Chest X-ray (Jan 2025)",
+      summary: "No significant abnormalities detected.",
+      details: [
+        { label: "Doctor", value: "Dr. Aaqel" },
+        { label: "Radiologist", value: "Dr. Ammar" },
+        { label: "Scan ID", value: "P001" },
+        { label: "Summary", value: "Lungs clear, normal heart size" },
+      ],
+    },
+  ];
+
   return (
     <div className="demo-root">
       <header className="demo-header">
         <h1>Welcome, Abdul</h1>
-        <p>Your personalized X-ray insight summary</p>
+        <p>Your reports and insights are shown below</p>
       </header>
 
       <main className="demo-container">
-        <section className="demo-card">
-          <h2>Recent Scan Result</h2>
-          <img
-            src="/images/xray-scan.jpg"
-            alt="Chest X-ray"
-            className="demo-img"
+        {myReports.map((r, i) => (
+          <CollapsibleReport
+            key={i}
+            title={r.title}
+            summary={r.summary}
+            details={r.details}
           />
-          <p>
-            <strong>No major abnormalities</strong> detected.  
-            Slight opacity observed — recommended routine follow-up.
-          </p>
-        </section>
-
-        <section className="demo-card">
-          <h2>Doctor’s Notes</h2>
-          <p>
-            Your chest X-ray looks healthy overall. Keep up regular check-ups
-            and report any breathing issues to your physician.
-          </p>
-        </section>
+        ))}
       </main>
     </div>
   );
